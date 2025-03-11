@@ -7,7 +7,6 @@ import FAQDocs from "@/components/docs/FAQDocs";
 import SequencesDocs from "@/components/docs/SequencesDocs";
 import LinksDocs from "@/components/docs/LinksDocs";
 import VariablesDocs from "@/components/docs/VariablesDocs";
-import CommandsDocs from "@/components/docs/CommandsDocs";
 
 const Docs: FC<{ section: string }> = ({ section }) => {
   const sections = () => {
@@ -20,8 +19,6 @@ const Docs: FC<{ section: string }> = ({ section }) => {
         return <LinksDocs />;
       case "vars":
         return <VariablesDocs />;
-      case "commands":
-        return <CommandsDocs />;
       default:
         return (
           <div className="gap-3 m-5">
