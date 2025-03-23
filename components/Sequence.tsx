@@ -130,10 +130,11 @@ const SequenceCard: FC<SequenceProps> = ({ sequence }) => {
         <Text className="mb-2 font-bold text-sm">Publikum</Text>
         <div className="flex gap-5 justify-start w-full">
           <MultiSelect
+            className="w-full"
             data={[
               { label: "Nezastakováno", value: "0" },
               { label: "Zastakováno", value: "1" },
-              { label: "Zastakováno", value: "2" },
+              { label: "Affiliate", value: "2" },
             ]}
             {...form.getInputProps("levels", {
               type: "checkbox",
@@ -179,20 +180,18 @@ const SequenceCard: FC<SequenceProps> = ({ sequence }) => {
             />
             <DateTimePicker
               className="w-full mb-3"
-              disabled={
-                sequence.sendImmediately || form.getValues().sendImmediately
-              }
+              disabled={form.getValues().sendImmediately}
               label="První zprávu odeslat"
               placeholder="Vyberte datum a čas"
               value={
                 form.values.startsAt
-                  ? dayjs.utc(form.values.startsAt).toDate() // Zajistěte, že čas zůstává v UTC
+                  ? dayjs.utc(form.values.startsAt).toDate()
                   : null
               }
               onChange={(value) => {
                 handleChange(
                   "startsAt",
-                  value ? dayjs.utc(value).toISOString() : null, // Odesílání zpět jako UTC
+                  value ? dayjs.utc(value).toISOString() : null,
                 );
               }}
             />

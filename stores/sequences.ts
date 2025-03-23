@@ -61,6 +61,7 @@ const useSequencesStore = create<SequenceState>((set, get) => ({
         `${PREFIX}${id}`,
         body.levels
           ? {
+              ...body,
               levels: body.levels.map((e) => Number(e)),
             }
           : body,

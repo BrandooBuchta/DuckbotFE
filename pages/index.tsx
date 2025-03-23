@@ -16,7 +16,7 @@ export default function Home() {
   const { push } = useRouter();
 
   useEffect(() => {
-    push("/settings/commands");
+    push("/settings/statistics");
   }, []);
 
   return (

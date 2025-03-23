@@ -1,15 +1,26 @@
 import { FC, JSX, useEffect } from "react";
 import {
+  IconCheck,
+  IconCopy,
+  IconEdit,
   IconLink,
   IconLogout,
   IconMessage,
   IconQuestionMark,
   IconReportAnalytics,
-  IconSlash,
+  IconSettings,
   IconVariable,
 } from "@tabler/icons-react";
 import Link from "next/link";
-import { Box, Button, Divider, Text } from "@mantine/core";
+import {
+  ActionIcon,
+  Box,
+  Button,
+  CopyButton,
+  Divider,
+  Text,
+  Tooltip,
+} from "@mantine/core";
 import { useRouter } from "next/router";
 
 import Section from "./Section";
@@ -24,14 +35,15 @@ const data = [
 ];
 
 const menuData = [
-  { link: "statistics", label: "Statistics", icon: IconReportAnalytics },
+  { link: "general", label: "Obecné", icon: IconSettings },
+  { link: "statistics", label: "Statistiky", icon: IconReportAnalytics },
   { link: "sequences", label: "Sekvence", icon: IconMessage },
   { link: "academy-links", label: "Academy Links", icon: IconLink },
   { link: "faq", label: "FAQ", icon: IconQuestionMark },
 ];
 
 const Sidebar: FC<{ children: JSX.Element }> = ({ children }) => {
-  const { signOut } = useBotStore();
+  const { signOut, bot } = useBotStore();
   const { pathname, query } = useRouter();
   const { setWebhook, deleteWebhook, webhookInfo, getWebhookInfo } =
     useBotStore();
@@ -108,18 +120,49 @@ const Sidebar: FC<{ children: JSX.Element }> = ({ children }) => {
         <div className="ml-72 w-full mt-20">
           {!pathname.includes("docs") && (
             <div className="gap-3 flex flex-col relative p-5 w-full">
-              <Section title="Webhook">
-                <div className="flex gap-1">
-                  <Button onClick={() => setWebhook()}>Nastavit Webhook</Button>
-                  <Button variant="subtle" onClick={() => deleteWebhook()}>
-                    Zrušit Webhook
-                  </Button>
-                </div>
-                <div className="flex gap-1">
-                  Stav webhooku:{" "}
-                  <Text c="pink" fw="bold">
-                    {webhookInfo ? "AKTIVNÍ" : "NEAKTIVNÍ"}
-                  </Text>
+              <Section title="Info">
+                <div className="flex w-full justify-between items-center">
+                  <div>
+                    <p className="font-bold">URL</p>
+                    <div className="flex">
+                      <p className="text-gray-500 text">{`https://ducknation.vercel.app/${bot?.isEvent ? "event" : "b"}/${bot?.id}`}</p>
+                      <CopyButton
+                        timeout={2000}
+                        value={`https://ducknation.vercel.app/${bot?.isEvent ? "event" : "b"}/${bot?.id}`}
+                      >
+                        {({ copied, copy }) => (
+                          <Tooltip
+                            withArrow
+                            label={copied ? "Copied" : "Copy"}
+                            position="right"
+                          >
+                            <ActionIcon
+                              color={copied ? "teal" : "gray"}
+                              variant="subtle"
+                              onClick={copy}
+                            >
+                              {copied ? (
+                                <IconCheck size={16} />
+                              ) : (
+                                <IconCopy size={16} />
+                              )}
+                            </ActionIcon>
+                          </Tooltip>
+                        )}
+                      </CopyButton>
+                    </div>
+                  </div>
+                  <div className="flex gap-1">
+                    <Button
+                      variant="light"
+                      onClick={() =>
+                        webhookInfo ? deleteWebhook() : setWebhook()
+                      }
+                    >
+                      <p className="text-black mr-2">WEBHOOK: </p>
+                      <b>{webhookInfo ? "ON" : "OFF"}</b>
+                    </Button>
+                  </div>
                 </div>
               </Section>
             </div>

@@ -44,7 +44,7 @@ export default function App({ Component, pageProps }: AppProps) {
       }
     } else {
       if (router.pathname.includes("auth")) {
-        router.push("/settings/commands");
+        router.push("/settings/general");
       }
     }
   };

@@ -40,7 +40,13 @@ const Sequences: FC = () => {
           .map((s) => (
             <SequenceCard key={s.id} sequence={s} />
           ))}
-        <ActionIcon mt="10" radius="xl" size="xl" onClick={() => addSequence()} loading={isLoading}>
+        <ActionIcon
+          loading={isLoading}
+          mt="10"
+          radius="xl"
+          size="xl"
+          onClick={() => addSequence()}
+        >
           <IconPlus />
         </ActionIcon>
       </div>

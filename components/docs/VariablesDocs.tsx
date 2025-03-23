@@ -5,10 +5,10 @@ import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 
 import useBotStore from "@/stores/bot";
-import { UpdateBot } from "@/interfaces/bot";
+import { CMS } from "@/interfaces/bot";
 
 interface InputDetails {
-  key: keyof UpdateBot;
+  key: keyof CMS;
   label: string;
   placeholder: string;
 }
@@ -97,19 +97,19 @@ const VariablesDocs: FC = () => {
   const { updateBot, bot } = useBotStore();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { push } = useRouter();
-  const [changedFields, setChangedFields] = useState<Partial<UpdateBot>>({});
+  const [changedFields, setChangedFields] = useState<Partial<CMS>>({});
 
   useEffect(() => {
     bot && form.setValues(bot);
   }, [bot]);
 
-  const form = useForm<UpdateBot>({
+  const form = useForm<CMS>({
     initialValues: {
       ...bot,
     },
   });
 
-  const handleChange = (field: keyof UpdateBot, value: any) => {
+  const handleChange = (field: keyof CMS, value: any) => {
     setChangedFields((prev) => ({ ...prev, [field]: value }));
     form.setFieldValue(field, value);
   };

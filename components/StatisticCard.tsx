@@ -15,12 +15,11 @@ const StatisticCard: FC<StatisticCardProps> = ({ statistic }) => {
 
   if (isClient)
     return (
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center w-1/4">
         <div className="bg-pink-100 text-pink-500 font-bold w-[80px] text-2xl aspect-square rounded-full grid place-content-center">
           {statistic.value}
         </div>
-        <h3 className="font-bold text-2xl mt-2">{statistic.label}</h3>
-        <h4 className="text-lg">{statistic.desc}</h4>
+        <h3 className="font-bold text-2xl mt-2">{statistic.title}</h3>
       </div>
     );
 };

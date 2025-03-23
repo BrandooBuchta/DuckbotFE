@@ -2,25 +2,25 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import Cookies from "js-cookie";
 import Router from "next/router";
+import { toast } from "react-toastify";
 
 import {
   Bot,
+  CMS,
   SignInRequest,
   SignInResponse,
   SignUpRequest,
-  UpdateBot,
 } from "@/interfaces/bot";
 import { api } from "@/utils/api";
-import { toast } from "react-toastify";
 
 interface AuthState {
   isLoggedIn: boolean;
   bot: Bot | null;
   webhookInfo: boolean;
   signIn: (signInInput: SignInRequest) => Promise<void>;
-  signUp: (input: SignUpRequest) => Promise<void>;
+  signUp: (input: SignUpRequest, isEvent: boolean) => Promise<void>;
   signOut: () => void;
-  updateBot: (updatedBot: UpdateBot) => Promise<void>;
+  updateBot: (updatedBot: CMS) => Promise<void>;
   setWebhook: () => Promise<void>;
   deleteWebhook: () => Promise<void>;
   getWebhookInfo: () => Promise<void>;
@@ -62,11 +62,12 @@ const useBotStore = create<AuthState>()(
           bot: null,
         });
       },
-      signUp: async (input) => {
+      signUp: async (input, isEvent) => {
         try {
           await api.post("bot/sign-up", {
             ...input,
             password: btoa(input.password),
+            isEvent,
           });
 
           Router.push("/auth/sign-in");
@@ -80,7 +81,7 @@ const useBotStore = create<AuthState>()(
         if (!oldState) return;
 
         try {
-          const { data: newState } = await api.put<UpdateBot>(
+          const { data: newState } = await api.put<Bot>(
             `bot/${get().bot?.id}`,
             body,
           );
@@ -131,7 +132,7 @@ const useBotStore = create<AuthState>()(
       },
     }),
     {
-      name: "bet-bot-storage",
+      name: "duckbot-store",
       storage: createJSONStorage(() => localStorage),
     },
   ),

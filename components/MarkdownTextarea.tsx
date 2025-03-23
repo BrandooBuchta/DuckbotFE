@@ -2,7 +2,7 @@ import { RichTextEditor } from "@mantine/tiptap";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { Text } from "@mantine/core";
 import HardBreak from "@tiptap/extension-hard-break";
 
@@ -21,6 +21,8 @@ const MarkdownTextarea: FC<MarkdownTextareaProps> = ({
   label,
   subLabel,
 }) => {
+  const [content, setContent] = useState<string>("")
+
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -42,6 +44,7 @@ const MarkdownTextarea: FC<MarkdownTextareaProps> = ({
       htmlContent = htmlContent.replace(/<br>$/g, "");
 
       onChange(htmlContent);
+      setContent(htmlContent)
     },
   });
 
@@ -69,6 +72,7 @@ const MarkdownTextarea: FC<MarkdownTextareaProps> = ({
         </RichTextEditor.Toolbar>
         <RichTextEditor.Content />
       </RichTextEditor>
+      {/* <p>{JSON.stringify({ content })}</p> */}
     </div>
   );
 };

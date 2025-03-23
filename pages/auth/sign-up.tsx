@@ -19,7 +19,10 @@ import { SignUpRequest } from "@/interfaces/bot";
 
 const SignUp: FC = () => {
   const { signUp } = useBotStore();
-  const { push } = useRouter();
+  const {
+    push,
+    query: { isEvent },
+  } = useRouter();
 
   const form = useForm<SignUpRequest>({
     initialValues: {
@@ -27,6 +30,7 @@ const SignUp: FC = () => {
       password: "",
       name: "",
       token: "",
+      isEvent: Boolean(isEvent),
     },
     validate: {
       email: (value) =>
@@ -38,8 +42,8 @@ const SignUp: FC = () => {
 
   const handleSignUp = async (values: SignUpRequest) => {
     try {
-      await signUp(values);
-      toast.success("Úspěšná registrace!"); // Replace this with your own success logic
+      await signUp(values, Boolean(isEvent));
+      toast.success("Úspěšná registrace!");
     } catch (error) {
       toast.error(`Chyba při registraci: ${error}`);
     } finally {

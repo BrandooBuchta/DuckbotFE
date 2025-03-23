@@ -1,5 +1,3 @@
-import { Dayjs } from "dayjs";
-
 export interface SignInRequest {
   email: string;
   password: string;
@@ -10,6 +8,7 @@ export interface SignUpRequest {
   name: string;
   password: string;
   token: string;
+  isEvent: boolean;
 }
 
 export interface SignInResponse {
@@ -22,31 +21,20 @@ export interface Bot {
   name: string;
   email: string;
   welcomeMessage?: string;
-  devscurrentlyAssigned: number;
+  devsCurrentlyAssigned: number;
   devsShare: number;
-  startMessage?: string;
-  helpMessage?: string;
   supportContact?: string;
-}
-
-export interface UpdateBot {
-  name?: string;
-  welcomeMessage?: string;
-  startMessage?: string;
-  helpMessage?: string;
-  supportContact?: string;
-}
-
-export interface PlainBot {
-  name: string;
-  welcomeMessage: string;
-  startMessage: string;
-  helpMessage: string;
-  supportContact: string;
+  videoUrl: string;
+  isEvent: boolean;
+  eventCapacity: 0;
+  eventDate: string;
+  eventLocation: string;
+  eventName: string;
+  lang: "cs" | "sk" | "en" | "esp";
 }
 
 export interface BotStatistic {
   value: number;
-  label: string;
-  desc: string;
+  title: string;
 }
+export type CMS = Partial<Bot>;
