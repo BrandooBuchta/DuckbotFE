@@ -24,6 +24,7 @@ export default function JsonFormatterPage() {
       setError("Neplatný JSON");
     }
   };
+  
 
   return (
     <div className="min-h-screen flex flex-col items-center p-4">
