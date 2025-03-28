@@ -10,8 +10,8 @@ import useBotStore from "@/stores/bot";
 import { CMS } from "@/interfaces/bot";
 
 const General: FC = () => {
-  const [modalOpened, setModalOpened] = useState<boolean>(false);
   const { updateBot, bot } = useBotStore();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const form = useForm<CMS>({
     initialValues: {
       videoUrl: "",
@@ -25,11 +25,15 @@ const General: FC = () => {
   });
 
   const handleSubmit = async (values: CMS) => {
+    setIsLoading(true);
+
     try {
       await updateBot(values);
       toast.success("Úspěch!");
     } catch (e) {
       toast.error(`Error: ${e}`);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -43,6 +47,9 @@ const General: FC = () => {
         className="flex flex-col gap-2"
         onSubmit={form.onSubmit(handleSubmit)}
       >
+        {!bot?.isEvent && (
+          <TextInput label="Alias" {...form.getInputProps("name")} />
+        )}
         <TextInput
           description={
             form.values.lang && (
@@ -94,8 +101,8 @@ const General: FC = () => {
           {...form.getInputProps("supportContact")}
         />
 
-        <Button mt="sm" type="submit">
-          Submit
+        <Button loading={isLoading} mt="sm" type="submit">
+          Uložit
         </Button>
       </form>
     </Box>

@@ -2,7 +2,6 @@ import { FC, JSX, useEffect } from "react";
 import {
   IconCheck,
   IconCopy,
-  IconEdit,
   IconLink,
   IconLogout,
   IconMessage,
@@ -92,7 +91,7 @@ const Sidebar: FC<{ children: JSX.Element }> = ({ children }) => {
     <div className="relative">
       <header className="border-b h-20 border-gray-300 flex justify-between p-5 items-center fixed z-20 w-full bg-white">
         <Text className="text-lg font-bold">
-          <b className="text-pink-500">Duckbot</b>
+          <img alt="logo" className="w-[100px] ml-1" src="/logo.svg" />
         </Text>
         <Box
           className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-200 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-black dark:hover:text-white transition-colors"
@@ -118,17 +117,17 @@ const Sidebar: FC<{ children: JSX.Element }> = ({ children }) => {
           </div>
         </nav>
         <div className="ml-72 w-full mt-20">
-          {!pathname.includes("docs") && (
+          {!pathname.includes("docs") && bot && (
             <div className="gap-3 flex flex-col relative p-5 w-full">
               <Section title="Info">
                 <div className="flex w-full justify-between items-center">
                   <div>
                     <p className="font-bold">URL</p>
                     <div className="flex">
-                      <p className="text-gray-500 text">{`https://ducknation.vercel.app/${bot?.isEvent ? "event" : "b"}/${bot?.id}`}</p>
+                      <p className="text-gray-500 text">{`https://ducknation.vercel.app/${bot.isEvent ? "event" : "b"}/${encodeURIComponent(bot[bot.isEvent ? "eventName" : "name"])}`}</p>
                       <CopyButton
                         timeout={2000}
-                        value={`https://ducknation.vercel.app/${bot?.isEvent ? "event" : "b"}/${bot?.id}`}
+                        value={`https://ducknation.vercel.app/${bot.isEvent ? "event" : "b"}/${encodeURIComponent(bot[bot.isEvent ? "eventName" : "name"])}`}
                       >
                         {({ copied, copy }) => (
                           <Tooltip

@@ -6,6 +6,7 @@ export interface SignInRequest {
 export interface SignUpRequest {
   email: string;
   name: string;
+  eventName: string;
   password: string;
   token: string;
   isEvent: boolean;

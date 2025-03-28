@@ -63,6 +63,7 @@ const useBotStore = create<AuthState>()(
         });
       },
       signUp: async (input, isEvent) => {
+        console.log(input)
         try {
           await api.post("bot/sign-up", {
             ...input,
