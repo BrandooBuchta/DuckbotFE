@@ -36,6 +36,7 @@ const Sequences: FC = () => {
     <div className="w-full mt-2" style={{ position: "relative" }}>
       <div className="w-full gap-5 flex flex-col justify-center items-center">
         {sequencesStore.sequences
+          .filter((e) => !e.name.includes("Event"))
           .sort((a, b) => a.position - b.position)
           .map((s) => (
             <SequenceCard key={s.id} sequence={s} />

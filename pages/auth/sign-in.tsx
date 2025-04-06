@@ -23,12 +23,10 @@ const SignIn: FC = () => {
 
   const form = useForm<SignInRequest>({
     initialValues: {
-      email: "",
+      name: "",
       password: "",
     },
     validate: {
-      email: (value) =>
-        /^[\w.-]+@([\w-]+\.)+[\w-]{2,4}$/.test(value) ? null : "Neplatný email",
       password: (value) =>
         value.length < 6 ? "Heslo musí mít alespoň 6 znaků" : null,
     },
@@ -66,9 +64,9 @@ const SignIn: FC = () => {
           <form onSubmit={form.onSubmit((values) => handleSignIn(values))}>
             <TextInput
               required
-              label="Email"
-              placeholder="tvuj@email.com"
-              {...form.getInputProps("email")}
+              label="Jméno"
+              placeholder="BotBot69_CS"
+              {...form.getInputProps("name")}
             />
             <PasswordInput
               required

@@ -55,7 +55,7 @@ const MarkdownTextarea: FC<MarkdownTextareaProps> = ({
         <Text className="text-xs text-pink-500 mb-1">{subLabel}</Text>
       )}
       <RichTextEditor editor={editor}>
-        <RichTextEditor.Toolbar sticky stickyOffset={60}>
+        <RichTextEditor.Toolbar sticky>
           <RichTextEditor.ControlsGroup>
             <RichTextEditor.Bold />
             <RichTextEditor.Italic />

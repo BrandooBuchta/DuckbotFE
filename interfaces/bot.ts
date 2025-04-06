@@ -1,10 +1,9 @@
 export interface SignInRequest {
-  email: string;
+  name: string;
   password: string;
 }
 
 export interface SignUpRequest {
-  email: string;
   name: string;
   eventName: string;
   password: string;
@@ -20,7 +19,6 @@ export interface SignInResponse {
 export interface Bot {
   id: string;
   name: string;
-  email: string;
   welcomeMessage?: string;
   devsCurrentlyAssigned: number;
   devsShare: number;
