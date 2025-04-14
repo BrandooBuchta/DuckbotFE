@@ -193,7 +193,11 @@ const CustomLevelPage: FC = () => {
                     min={0}
                     value={days}
                     onChange={(val) =>
-                      updateNextMessageSendAfter(index, "days", val || 0)
+                      updateNextMessageSendAfter(
+                        index,
+                        "days",
+                        Number(val) || 0,
+                      )
                     }
                   />
                   <NumberInput
@@ -202,7 +206,11 @@ const CustomLevelPage: FC = () => {
                     min={0}
                     value={hours}
                     onChange={(val) =>
-                      updateNextMessageSendAfter(index, "hours", val || 0)
+                      updateNextMessageSendAfter(
+                        index,
+                        "hours",
+                        Number(val) || 0,
+                      )
                     }
                   />
                   <NumberInput
@@ -211,7 +219,11 @@ const CustomLevelPage: FC = () => {
                     min={0}
                     value={minutes}
                     onChange={(val) =>
-                      updateNextMessageSendAfter(index, "minutes", val || 0)
+                      updateNextMessageSendAfter(
+                        index,
+                        "minutes",
+                        Number(val) || 0,
+                      )
                     }
                   />
                 </Group>
