@@ -20,8 +20,6 @@ export interface Bot {
   id: string;
   name: string;
   welcomeMessage?: string;
-  devsCurrentlyAssigned: number;
-  devsShare: number;
   supportContact?: string;
   videoUrl: string;
   isEvent: boolean;

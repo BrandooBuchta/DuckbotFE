@@ -3,7 +3,6 @@ import { GetServerSideProps } from "next";
 import { Text } from "@mantine/core";
 
 import Sidebar from "@/components/Sidebar";
-import FAQDocs from "@/components/docs/FAQDocs";
 import SequencesDocs from "@/components/docs/SequencesDocs";
 import LinksDocs from "@/components/docs/LinksDocs";
 import VariablesDocs from "@/components/docs/VariablesDocs";
@@ -11,8 +10,6 @@ import VariablesDocs from "@/components/docs/VariablesDocs";
 const Docs: FC<{ section: string }> = ({ section }) => {
   const sections = () => {
     switch (section) {
-      case "faq":
-        return <FAQDocs />;
       case "sequences":
         return <SequencesDocs />;
       case "academy-links":

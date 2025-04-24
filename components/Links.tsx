@@ -112,7 +112,7 @@ const Links: FC = () => {
 
     const totalShares = linksCopy.reduce((sum, link) => sum + link.share, 0);
 
-    if (totalShares !== 90) {
+    if (totalShares !== 100) {
       setIsError(true);
       setLoading(false);
 
@@ -223,7 +223,7 @@ const Links: FC = () => {
               {provided.placeholder}
               {isError && (
                 <Text c="red" fw="bold" size="sm" ta="center">
-                  *Součet všech podílů musí být roven 90
+                  *Součet všech podílů musí být roven 100
                 </Text>
               )}
               <Text className="mx-7 font-black">Poměr</Text>
@@ -239,9 +239,6 @@ const Links: FC = () => {
                     </Progress.Label>
                   </Progress.Section>
                 ))}
-                <Progress.Section color="pink" value={10}>
-                  <Progress.Label>Vývojáři (Fixní)</Progress.Label>
-                </Progress.Section>
               </Progress.Root>
               <div className="flex justify-between items-center mx-5">
                 <div className="flex gap-2">
@@ -253,10 +250,6 @@ const Links: FC = () => {
                   >
                     Přidat
                   </Button>
-                </div>
-                <div>
-                  <Text fw={900}>Vývojáři</Text>
-                  <Text fw={500}>6 / 10</Text>
                 </div>
               </div>
             </div>

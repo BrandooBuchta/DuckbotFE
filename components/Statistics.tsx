@@ -7,21 +7,6 @@ import { BotStatistic } from "@/interfaces/bot";
 import { api } from "@/utils/api";
 import useBotStore from "@/stores/bot";
 
-const STATISTICS_MOCK: BotStatistic[] = [
-  {
-    value: 50,
-    title: "Nezastakovano",
-  },
-  {
-    value: 20,
-    title: "Zastakovano",
-  },
-  {
-    value: 2,
-    title: "Affiliate",
-  },
-];
-
 const Statistics: FC = ({}) => {
   const [isClient, setIsClient] = useState<boolean>(false);
   const [statistics, setStatistics] = useState<BotStatistic[]>([]);

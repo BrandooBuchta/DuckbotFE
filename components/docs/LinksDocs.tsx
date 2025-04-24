@@ -2,14 +2,14 @@ import { Code, Text } from "@mantine/core";
 import Link from "next/link";
 import { FC, JSX } from "react";
 
-interface FAQSection {
+interface LinksSection {
   name: string;
   descripton: string;
   icon?: JSX.Element;
   href?: string;
 }
 
-const sections: FAQSection[] = [
+const sections: LinksSection[] = [
   {
     name: "Link Alias",
     descripton: "Pojemnování linku pro lepší orientaci.",

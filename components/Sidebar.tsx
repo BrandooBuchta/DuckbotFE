@@ -30,7 +30,6 @@ const data = [
   { link: "vars", label: "Variables", icon: IconVariable },
   { link: "sequences", label: "Sekvence", icon: IconMessage },
   { link: "academy-links", label: "Academy Links", icon: IconLink },
-  { link: "faq", label: "FAQ", icon: IconQuestionMark },
 ];
 
 const menuData = [
@@ -38,7 +37,6 @@ const menuData = [
   { link: "statistics", label: "Statistiky", icon: IconReportAnalytics },
   { link: "sequences", label: "Sekvence", icon: IconMessage },
   { link: "academy-links", label: "Academy Links", icon: IconLink },
-  { link: "faq", label: "FAQ", icon: IconQuestionMark },
 ];
 
 const Sidebar: FC<{ children: JSX.Element }> = ({ children }) => {
