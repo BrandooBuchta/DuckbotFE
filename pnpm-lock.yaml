@@ -32,6 +32,9 @@ dependencies:
   '@octokit/rest':
     specifier: ^21.1.1
     version: 21.1.1
+  '@tabler/icons':
+    specifier: ^3.31.0
+    version: 3.31.0
   '@tabler/icons-react':
     specifier: ^3.26.0
     version: 3.26.0(react@19.0.0)
@@ -882,6 +885,10 @@ packages:
 
   /@tabler/icons@3.26.0:
     resolution: {integrity: sha512-oO3D4ss+DxzxqU1aDy0f1HmToyrO0gcQWIMpzHAfV1quPUx0BZYvNm5xz1DQb4DxNm/+xNvbBGLJy4pzTLYWag==}
+    dev: false
+
+  /@tabler/icons@3.31.0:
+    resolution: {integrity: sha512-dblAdeKY3+GA1U+Q9eziZ0ooVlZMHsE8dqP0RkwvRtEsAULoKOYaCUOcJ4oW1DjWegdxk++UAt2SlQVnmeHv+g==}
     dev: false
 
   /@tiptap/core@2.10.4(@tiptap/pm@2.10.4):

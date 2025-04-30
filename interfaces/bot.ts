@@ -33,5 +33,7 @@ export interface Bot {
 export interface BotStatistic {
   value: number;
   title: string;
+  isPercantage: boolean;
+  change: number;
 }
 export type CMS = Partial<Bot>;
