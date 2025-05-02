@@ -5,13 +5,13 @@ import { IconArrowDownRight, IconArrowUpRight } from "@tabler/icons-react";
 import { BotStatistic } from "@/interfaces/bot";
 
 const intervalOptions = [
-  { value: "lastHour", label: "Nárust za minulou hodinu" },
-  { value: "lastDay", label: "Nárust od včera" },
-  { value: "lastWeek", label: "Nárust za minulý týden" },
-  { value: "lastMonth", label: "Nárust za minulý měsíc" },
-  { value: "lastYear", label: "Nárust za minulý rok" },
-  { value: "total", label: "" },
-  { value: "custom", label: "" },
+  { value: "lastHour", label: "za minulou hodinu" },
+  { value: "lastDay", label: "od včera" },
+  { value: "lastWeek", label: "za minulý týden" },
+  { value: "lastMonth", label: "za minulý měsíc" },
+  { value: "lastYear", label: "za minulý rok" },
+  { value: "total" },
+  { value: "custom" },
 ];
 
 type IntervalValue = (typeof intervalOptions)[number]["value"];
@@ -23,7 +23,9 @@ interface StatisticCardProps {
 
 const StatisticCard: FC<StatisticCardProps> = ({ statistic, interval }) => {
   const [isClient, setIsClient] = useState<boolean>(false);
-  const DiffIcon = statistic.value > 0 ? IconArrowUpRight : IconArrowDownRight;
+  const DiffIcon = statistic.change > 0 ? IconArrowUpRight : IconArrowDownRight;
+  const diffDirection = statistic.change > 0 ? "Nárust" : "Pokles";
+  const option = intervalOptions.find((e) => e.value === interval)?.label;
 
   useEffect(() => {
     setIsClient(true);
@@ -55,7 +57,7 @@ const StatisticCard: FC<StatisticCardProps> = ({ statistic, interval }) => {
           mt={25}
         >
           <Text className="text-2xl font-bold leading-none">
-            {statistic.value.toFixed(2)} {statistic.isPercantage && "%"}
+            {statistic.value.toFixed(2)} {statistic.isRatio && "%"}
           </Text>
           {statistic.change && (
             <Text
@@ -65,23 +67,22 @@ const StatisticCard: FC<StatisticCardProps> = ({ statistic, interval }) => {
               fw={500}
               fz="sm"
             >
-              <span>{statistic.change.toFixed(2)}</span>
+              <span>{statistic.change.toFixed(2)} %</span>
               <DiffIcon className="ml-1" size={16} stroke={1.5} />
             </Text>
           )}
         </Group>
 
-        {intervalOptions.find((e) => e.value === interval) &&
-          statistic.change && (
-            <Text
-              c="dimmed"
-              className="text-xs text-gray-500 dark:text-gray-400 mt-2"
-              fz="xs"
-              mt={7}
-            >
-              {intervalOptions.find((e) => e.value === interval)?.label}
-            </Text>
-          )}
+        <Text
+          c="dimmed"
+          className="text-xs text-gray-500 dark:text-gray-400 mt-2"
+          fz="xs"
+          mt={7}
+        >
+          {statistic.change
+            ? `${diffDirection} ${option}`
+            : "Nedostatek dat pro měření změny"}
+        </Text>
       </Paper>
     );
 };
