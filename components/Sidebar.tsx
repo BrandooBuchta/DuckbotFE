@@ -122,10 +122,10 @@ const Sidebar: FC<{ children: JSX.Element }> = ({ children }) => {
                   <div>
                     <p className="font-bold">URL</p>
                     <div className="flex">
-                      <p className="text-gray-500 text">{`https://ducknation.vercel.app/${bot.isEvent ? "event" : "b"}/${encodeURIComponent(bot[bot.isEvent ? "eventName" : "name"])}`}</p>
+                      <p className="text-gray-500 text">{`https://${bot.domain || "ducknation.vercel.app"}/${bot.isEvent ? "event" : "b"}/${encodeURIComponent(bot[bot.isEvent ? "eventName" : "name"])}`}</p>
                       <CopyButton
                         timeout={2000}
-                        value={`https://ducknation.vercel.app/${bot.isEvent ? "event" : "b"}/${encodeURIComponent(bot[bot.isEvent ? "eventName" : "name"])}`}
+                        value={`https://${bot.domain || "ducknation.vercel.app"}/${bot.isEvent ? "event" : "b"}/${encodeURIComponent(bot[bot.isEvent ? "eventName" : "name"])}`}
                       >
                         {({ copied, copy }) => (
                           <Tooltip

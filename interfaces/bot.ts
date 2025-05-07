@@ -19,13 +19,13 @@ export interface SignInResponse {
 export interface Bot {
   id: string;
   name: string;
-  welcomeMessage?: string;
-  supportContact?: string;
   videoUrl: string;
   isEvent: boolean;
   eventCapacity: 0;
   eventDate: string;
   eventLocation: string;
+  domain: string | null;
+  videos: string[];
   eventName: string;
   lang: "cs" | "sk" | "en" | "esp";
 }
@@ -37,3 +37,26 @@ export interface BotStatistic {
   change: number;
 }
 export type CMS = Partial<Bot>;
+
+export interface DomainConfig {
+  configuredBy: any;
+  nameservers: string[];
+  serviceType: string;
+  cnames: any[];
+  aValues: any[];
+  conflicts: any[];
+  acceptedChallenges: any[];
+  misconfigured: boolean;
+  recommendedIPv4: RecommendedIpv4[];
+  recommendedCNAME: RecommendedCname[];
+}
+
+export interface RecommendedIpv4 {
+  rank: number;
+  value: string[];
+}
+
+export interface RecommendedCname {
+  rank: number;
+  value: string;
+}
