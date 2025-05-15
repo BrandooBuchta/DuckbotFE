@@ -19,7 +19,6 @@ export async function checkOrCreateLevelJson(
   const customPath = `${basePath}/customs/${botId}/level-${level}.json`;
 
   try {
-    // 1. Zkontroluj, jestli už soubor existuje
     await octokit.repos.getContent({
       owner,
       repo,
@@ -34,11 +33,9 @@ export async function checkOrCreateLevelJson(
     if (err.status !== 404) throw err;
   }
 
-  // 2. Urči fallback path podle lang + isEvent
   const type = isEvent ? "event" : "online";
   const fallbackPath = `${basePath}/traces/${lang}/${type}/level-${level}.json`;
 
-  // 3. Získej obsah výchozího souboru
   const { data: fallbackFile } = await octokit.repos.getContent({
     owner,
     repo,
@@ -53,7 +50,6 @@ export async function checkOrCreateLevelJson(
   const content = fallbackFile.content;
   const decoded = Buffer.from(content, "base64").toString("utf-8");
 
-  // 4. Vytvoř nový soubor (GitHub složku vytvoří automaticky)
   await octokit.repos.createOrUpdateFileContents({
     owner,
     repo,

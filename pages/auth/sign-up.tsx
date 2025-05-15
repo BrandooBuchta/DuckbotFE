@@ -5,6 +5,7 @@ import {
   Group,
   Paper,
   PasswordInput,
+  Select,
   Switch,
   Text,
   TextInput,
@@ -34,6 +35,7 @@ const SignUp: FC = () => {
       name: "",
       eventName: "",
       token: "",
+      lang: "cs",
       isEvent: isEvent ? Boolean(isEvent) : false,
     },
     validate: {
@@ -88,7 +90,7 @@ const SignUp: FC = () => {
                 required
                 label="Jméno eventu"
                 mt="sm"
-                placeholder="DuckNation KickOff"
+                placeholder="DuckNationKickOff_bot"
                 {...form.getInputProps("eventName")}
               />
             ) : (
@@ -96,10 +98,21 @@ const SignUp: FC = () => {
                 required
                 label="Jméno"
                 mt="sm"
-                placeholder="BabyDuck94"
+                placeholder="BabyDuck94_bot"
                 {...form.getInputProps("name")}
               />
             )}
+            <Select
+              data={[
+                { value: "cs", label: "Czech" },
+                { value: "en", label: "English" },
+                { value: "esp", label: "Spanish" },
+                { value: "sk", label: "Slovak" },
+              ]}
+              label="Language"
+              mt="sm"
+              {...form.getInputProps("lang")}
+            />
             <PasswordInput
               required
               label="Token"

@@ -5,9 +5,9 @@ import {
   IconLink,
   IconLogout,
   IconMessage,
-  IconQuestionMark,
   IconReportAnalytics,
   IconSettings,
+  IconUsers,
   IconVariable,
 } from "@tabler/icons-react";
 import Link from "next/link";
@@ -37,6 +37,7 @@ const menuData = [
   { link: "statistics", label: "Statistiky", icon: IconReportAnalytics },
   { link: "sequences", label: "Sekvence", icon: IconMessage },
   { link: "academy-links", label: "Academy Links", icon: IconLink },
+  { link: "users", label: "Uživatelé", icon: IconUsers },
 ];
 
 const Sidebar: FC<{ children: JSX.Element }> = ({ children }) => {
@@ -50,7 +51,7 @@ const Sidebar: FC<{ children: JSX.Element }> = ({ children }) => {
       getWebhookInfo();
     };
 
-    const interval = setInterval(handleInterval, 60000);
+    const interval = setInterval(handleInterval, 600000);
 
     return () => clearInterval(interval);
   }, []);

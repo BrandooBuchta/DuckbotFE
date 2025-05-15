@@ -9,6 +9,7 @@ export interface SignUpRequest {
   password: string;
   token: string;
   isEvent: boolean;
+  lang: "cs" | "sk" | "en" | "esp";
 }
 
 export interface SignInResponse {
@@ -36,6 +37,7 @@ export interface BotStatistic {
   isRatio: boolean;
   change: number;
 }
+
 export type CMS = Partial<Bot>;
 
 export interface DomainConfig {

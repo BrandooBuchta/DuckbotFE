@@ -8,6 +8,7 @@ import Sidebar from "@/components/Sidebar";
 import Sequences from "@/components/Sequences";
 import Statistics from "@/components/Statistics";
 import General from "@/components/General";
+import UsersSection from "@/components/UsersSection";
 
 const Settings: FC<{ section: string }> = ({ section }) => {
   const [isClient, setIsClient] = useState<boolean>(false);
@@ -47,6 +48,14 @@ const Settings: FC<{ section: string }> = ({ section }) => {
           <div className="gap-3 m-5">
             <Section title="Obecné">
               <General />
+            </Section>
+          </div>
+        );
+      case "users":
+        return (
+          <div className="gap-3 m-5">
+            <Section title="Obecné">
+              <UsersSection />
             </Section>
           </div>
         );

@@ -19,6 +19,7 @@ import useBotStore from "@/stores/bot";
 import { CMS } from "@/interfaces/bot";
 import { checkOrCreateLevelJson } from "@/utils/traces";
 import { getDNSInstructions, handleDomainChange } from "@/utils/vercel";
+import { updateCORSPolicy } from "@/utils/cors";
 
 const levels: string[] = ["Nezastakováno", "Zastakováno", "Affiliate"];
 
@@ -55,8 +56,10 @@ const General: FC = () => {
     const newDomain = values.domain;
 
     try {
-      if (newDomain !== undefined)
+      if (newDomain !== undefined) {
         await handleDomainChange(oldDomain, newDomain);
+        await updateCORSPolicy(oldDomain, newDomain);
+      }
 
       const payload = {
         ...values,
@@ -161,7 +164,6 @@ const General: FC = () => {
 
                     updated.splice(index, 1);
 
-                    // pokud poslední záznam je prázdný, smaž ho taky
                     if (
                       updated.length > 0 &&
                       updated[updated.length - 1].trim() === ""
@@ -181,8 +183,8 @@ const General: FC = () => {
             </Box>
           ))}
           <Button
-            variant="light"
             className="mx-5"
+            variant="light"
             onClick={() => {
               const current = form.values.videos || [];
 
@@ -249,8 +251,15 @@ const General: FC = () => {
             </Box>
           )}
           <TextInput
-            label="Support Contact"
+            label="Telegram"
+            placeholder="@SupportContact99"
             {...form.getInputProps("supportContact")}
+          />
+
+          <TextInput
+            label="Instagram"
+            placeholder="@supportcontact99"
+            {...form.getInputProps("instagram")}
           />
 
           <Button loading={isLoading} mt="sm" type="submit">
