@@ -1,0 +1,158 @@
+"use client";
+
+import { FC, useEffect, useRef, useState } from "react";
+import { Button, Card, PinInput, Text } from "@mantine/core";
+import { toast } from "react-toastify";
+
+import MarkdownTextarea from "./MarkdownTextarea";
+
+import { api } from "@/utils/api";
+import useBotStore from "@/stores/bot";
+
+const TelegramBroadcast: FC = () => {
+  const [isClient, setIsClient] = useState(false);
+  const { bot } = useBotStore();
+
+  const [phone, setPhone] = useState("");
+  const [code, setCode] = useState("");
+  const [message, setMessage] = useState("");
+  const [authStep, setAuthStep] = useState<"phone" | "code" | "done">("done");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [session, setSession] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  const sendPhone = async () => {
+    setIsSubmitting(true);
+    try {
+      await api.post("/telegram/start", { phone });
+      setAuthStep("code");
+      toast.success("Kód odeslán");
+    } catch (err: any) {
+      toast.error(err?.response?.data?.detail || "Chyba při odeslání kódu");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const confirmCode = async () => {
+    setIsSubmitting(true);
+    try {
+      const res = await api.post("/telegram/confirm", { phone, code });
+
+      setSession(res.data.session);
+      setAuthStep("done");
+      toast.success("Autentizace úspěšná");
+    } catch (err: any) {
+      toast.error(err?.response?.data?.detail || "Nepodařilo se přihlásit");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const sendBroadcast = async () => {
+    if (!session) {
+      toast.error("Chybí session – přihlas se prosím znovu.");
+
+      return;
+    }
+
+    setIsSending(true);
+    try {
+      await api.post("/telegram/broadcast", {
+        message,
+        session,
+        lang: bot?.lang,
+      });
+      toast.success("Zprávy odeslány");
+      setMessage("");
+    } catch (err: any) {
+      toast.error(err?.response?.data?.detail || "Chyba při odesílání");
+    } finally {
+      setIsSending(false);
+    }
+  };
+
+  return (
+    <div className="w-fit mx-auto mt-32">
+      {authStep === "phone" && (
+        <Card withBorder radius="md" shadow="sm">
+          <Text fw="bold" size="xl">
+            Zadej své telefonní číslo | +420 XXX XXX XXX
+          </Text>
+          <PinInput
+            className="my-4"
+            length={9}
+            type="number"
+            value={phone}
+            onChange={(e) => setPhone(e)}
+          />
+          <Button fullWidth loading={isSubmitting} onClick={sendPhone}>
+            Odeslat kód
+          </Button>
+        </Card>
+      )}
+
+      {authStep === "code" && (
+        <Card withBorder radius="md" shadow="sm">
+          <Text className="text-center" fw="black" size="lg">
+            Zadej ověřovací kód z Telegramu
+          </Text>
+          <PinInput
+            className="my-4 mx-auto"
+            length={5}
+            type="number"
+            value={code}
+            onChange={(e) => setCode(e)}
+          />
+          <Button fullWidth loading={isSubmitting} onClick={confirmCode}>
+            Přihlásit se
+          </Button>
+        </Card>
+      )}
+
+      {authStep === "done" && (
+        <Card withBorder className="lg:w-[600px]" radius="md" shadow="sm">
+          <Text className="mb-3 font-semibold">
+            Hromadná zpráva na Telegram kontakty
+          </Text>
+          <MarkdownTextarea
+            className="mb-4"
+            value={message}
+            onChange={(v) => setMessage(v)}
+          />
+          <input
+            ref={fileInputRef}
+            capture
+            hidden
+            accept="image/*,video/*"
+            type="file"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+
+              if (file) {
+                toast.info(`Vybrán soubor: ${file.name}`);
+              }
+            }}
+          />
+          <Button
+            className="mb-5"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            Nahrát fotku/video
+          </Button>
+
+          <Button loading={isSending} onClick={sendBroadcast}>
+            Odeslat zprávu
+          </Button>
+        </Card>
+      )}
+    </div>
+  );
+};
+
+export default TelegramBroadcast;

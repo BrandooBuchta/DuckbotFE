@@ -94,7 +94,7 @@ const General: FC = () => {
 
   if (bot)
     return (
-      <Box className="w-full mt-2" style={{ position: "relative" }}>
+      <Box className="w-full my-2" style={{ position: "relative" }}>
         <form
           className="flex flex-col gap-2"
           onSubmit={form.onSubmit(handleSubmit)}
@@ -107,7 +107,7 @@ const General: FC = () => {
             {levels.map((label, idx) => (
               <Button
                 key={idx}
-                size="compact-md"
+                size="compact-sm"
                 variant="light"
                 onClick={async () => {
                   const { redirectUrl } = await checkOrCreateLevelJson(

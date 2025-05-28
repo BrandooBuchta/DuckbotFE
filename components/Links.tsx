@@ -162,7 +162,7 @@ const Links: FC = () => {
                         }`}
                         {...provided.draggableProps}
                       >
-                        <div className="mx-5">
+                        <div className="mx-5 hidden lg:block">
                           <IconLink />
                         </div>
                         <div className="mx-2 w-full">

@@ -4,11 +4,12 @@ import { GetServerSideProps } from "next";
 
 import Links from "@/components/Links";
 import Section from "@/components/Section";
-import Sidebar from "@/components/Sidebar";
+import SettingSidebar from "@/components/Sidebar";
 import Sequences from "@/components/Sequences";
 import Statistics from "@/components/Statistics";
 import General from "@/components/General";
 import UsersSection from "@/components/UsersSection";
+import TelegramBroadcast from "@/components/TelegramBroadcast";
 
 const Settings: FC<{ section: string }> = ({ section }) => {
   const [isClient, setIsClient] = useState<boolean>(false);
@@ -21,7 +22,7 @@ const Settings: FC<{ section: string }> = ({ section }) => {
     switch (section) {
       case "sequences":
         return (
-          <div className="gap-3 m-5">
+          <div className="gap-3 m-1">
             <Section title="Sekvence">
               <Sequences />
             </Section>
@@ -29,7 +30,7 @@ const Settings: FC<{ section: string }> = ({ section }) => {
         );
       case "academy-links":
         return (
-          <div className="gap-3 m-5">
+          <div className="gap-3 m-1">
             <Section title="Academy Links">
               <Links />
             </Section>
@@ -37,7 +38,7 @@ const Settings: FC<{ section: string }> = ({ section }) => {
         );
       case "statistics":
         return (
-          <div className="gap-3 m-5">
+          <div className="gap-3 m-1">
             <Section title="Statistiky">
               <Statistics />
             </Section>
@@ -45,7 +46,7 @@ const Settings: FC<{ section: string }> = ({ section }) => {
         );
       case "general":
         return (
-          <div className="gap-3 m-5">
+          <div className="gap-3 m-1">
             <Section title="Obecné">
               <General />
             </Section>
@@ -53,9 +54,17 @@ const Settings: FC<{ section: string }> = ({ section }) => {
         );
       case "users":
         return (
-          <div className="gap-3 m-5">
+          <div className="gap-3 m-1">
             <Section title="Obecné">
               <UsersSection />
+            </Section>
+          </div>
+        );
+      case "broadcast":
+        return (
+          <div className="gap-3 m-1">
+            <Section title="Broadcast">
+              <TelegramBroadcast />
             </Section>
           </div>
         );
@@ -70,9 +79,9 @@ const Settings: FC<{ section: string }> = ({ section }) => {
 
   if (isClient)
     return (
-      <Sidebar>
+      <SettingSidebar>
         <>{section && sections ? sections() : <>No section</>} </>
-      </Sidebar>
+      </SettingSidebar>
     );
 };
 

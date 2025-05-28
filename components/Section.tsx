@@ -8,7 +8,7 @@ interface SectionProps {
 
 const Section: FC<SectionProps> = ({ title, children }) => {
   return (
-    <Card shadow="sm" padding="md" radius="md" withBorder>
+    <Card>
       <Text fw="bold" size="xl">{title}</Text>
       <Group justify="space-between" mb="xs" className='flex w-full'>
         {children}

@@ -87,14 +87,7 @@ const SequenceCard: FC<SequenceProps> = ({ sequence }) => {
   };
 
   return (
-    <Card
-      withBorder
-      className="gap-3"
-      padding="md"
-      radius="md"
-      shadow="sm"
-      w="100%"
-    >
+    <Card withBorder className="gap-3" radius="md" shadow="sm" w="100%">
       <div className="flex justify-between">
         <Text
           contentEditable
@@ -143,7 +136,7 @@ const SequenceCard: FC<SequenceProps> = ({ sequence }) => {
           />
         </div>
       </div>
-      <div className="flex gap-5 my-3">
+      <div className="flex lg:flex-row flex-col gap-5 my-3">
         <div className="flex flex-col w-full">
           <Text className="my-2 font-bold text-sm">Opakování zprávy</Text>
           <div className="flex flex-col gap-2 justify-start w-full">
