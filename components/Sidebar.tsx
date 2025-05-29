@@ -36,7 +36,10 @@ const Sidebar: FC<{ children: JSX.Element }> = ({ children }) => {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+      setIsSidebarOpen(!(window.innerWidth < 768));
+    };
 
     checkMobile();
     window.addEventListener("resize", checkMobile);

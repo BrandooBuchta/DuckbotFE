@@ -31,11 +31,11 @@ const TelegramBroadcast: FC = () => {
   const [session, setSession] = useState<string | null>(null);
   const [phoneCodeHash, setPhoneCodeHash] = useState<string | null>(null);
   const [startSession, setStartSession] = useState<string | null>(null);
+  const [file, setFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     setIsClient(true);
-
     const storedSession = Cookies.get("telegram_session");
 
     if (storedSession) {
@@ -59,7 +59,6 @@ const TelegramBroadcast: FC = () => {
 
       setPhoneCodeHash(res.data.phoneCodeHash);
       setStartSession(res.data.session);
-
       setAuthStep("code");
       toast.success("Kód odeslán");
     } catch (err: any) {
@@ -112,13 +111,23 @@ const TelegramBroadcast: FC = () => {
 
     setIsSending(true);
     try {
-      await api.post("/telegram/broadcast", {
-        message,
-        session,
-        lang: bot?.lang,
+      const formData = new FormData();
+
+      formData.append("session", session);
+      formData.append("message", message);
+      formData.append("lang", bot?.lang || "cs");
+      if (file) {
+        console.log("file: ", file);
+        formData.append("file", file);
+      }
+
+      await api.post("/telegram/broadcast", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
+
       toast.success("Zprávy odeslány");
       setMessage("");
+      setFile(null);
     } catch (err: any) {
       toast.error(err?.response?.data?.detail || "Chyba při odesílání");
     } finally {
@@ -187,24 +196,36 @@ const TelegramBroadcast: FC = () => {
           />
           <input
             ref={fileInputRef}
-            capture
             hidden
             accept="image/*,video/*"
             type="file"
             onChange={(e) => {
-              const file = e.target.files?.[0];
+              const selected = e.target.files?.[0];
 
-              if (file) {
-                toast.info(`Vybrán soubor: ${file.name}`);
+              if (selected) {
+                setFile(selected);
+                toast.info(`Vybrán soubor: ${selected.name}`);
               }
             }}
           />
-          <Button
-            className="mb-5"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            Nahrát fotku/video
-          </Button>
+          <div className="mb-3">
+            {file && (
+              <Text className="mb-1" size="sm">
+                Vybraný soubor: <b>{file.name}</b>
+              </Text>
+            )}
+            <Button
+              className="mr-2"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              Nahrát fotku/video
+            </Button>
+            {file && (
+              <Button color="red" variant="light" onClick={() => setFile(null)}>
+                Odebrat soubor
+              </Button>
+            )}
+          </div>
           <Button loading={isSending} onClick={sendBroadcast}>
             Odeslat zprávu
           </Button>
