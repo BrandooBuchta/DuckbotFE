@@ -3,33 +3,63 @@
 import { FC, useEffect, useRef, useState } from "react";
 import { Button, Card, PinInput, Text } from "@mantine/core";
 import { toast } from "react-toastify";
+import Cookies from "js-cookie";
 
 import MarkdownTextarea from "./MarkdownTextarea";
 
 import { api } from "@/utils/api";
 import useBotStore from "@/stores/bot";
 
+const prefixMap = {
+  cs: "420",
+  sk: "421",
+  esp: "34",
+  en: "1",
+};
+
 const TelegramBroadcast: FC = () => {
   const [isClient, setIsClient] = useState(false);
   const { bot } = useBotStore();
 
   const [phone, setPhone] = useState("");
+  const [phonePrefix, setPhonePrefix] = useState("");
   const [code, setCode] = useState("");
   const [message, setMessage] = useState("");
-  const [authStep, setAuthStep] = useState<"phone" | "code" | "done">("done");
+  const [authStep, setAuthStep] = useState<"phone" | "code" | "done">("phone");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [session, setSession] = useState<string | null>(null);
+  const [phoneCodeHash, setPhoneCodeHash] = useState<string | null>(null);
+  const [startSession, setStartSession] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     setIsClient(true);
+
+    const storedSession = Cookies.get("telegram_session");
+
+    if (storedSession) {
+      setSession(storedSession);
+      setAuthStep("done");
+    }
   }, []);
+
+  useEffect(() => {
+    const lang = bot?.lang && prefixMap[bot.lang];
+
+    lang && setPhonePrefix(lang);
+  }, [bot?.lang]);
 
   const sendPhone = async () => {
     setIsSubmitting(true);
     try {
-      await api.post("/telegram/start", { phone });
+      const res = await api.post("/telegram/start", {
+        phone: `+${phonePrefix}${phone}`,
+      });
+
+      setPhoneCodeHash(res.data.phoneCodeHash);
+      setStartSession(res.data.session);
+
       setAuthStep("code");
       toast.success("Kód odeslán");
     } catch (err: any) {
@@ -40,11 +70,30 @@ const TelegramBroadcast: FC = () => {
   };
 
   const confirmCode = async () => {
+    if (!phoneCodeHash || !startSession) {
+      toast.error("Chybí session nebo phoneCodeHash.");
+
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      const res = await api.post("/telegram/confirm", { phone, code });
+      const res = await api.post("/telegram/confirm", {
+        phone: `+${phonePrefix}${phone}`,
+        code,
+        phoneCodeHash,
+        session: startSession,
+      });
 
-      setSession(res.data.session);
+      const newSession = res.data.session;
+
+      Cookies.set("telegram_session", newSession, {
+        expires: 14,
+        secure: true,
+        sameSite: "Lax",
+      });
+
+      setSession(newSession);
       setAuthStep("done");
       toast.success("Autentizace úspěšná");
     } catch (err: any) {
@@ -84,13 +133,24 @@ const TelegramBroadcast: FC = () => {
           <Text fw="bold" size="xl">
             Zadej své telefonní číslo | +420 XXX XXX XXX
           </Text>
-          <PinInput
-            className="my-4"
-            length={9}
-            type="number"
-            value={phone}
-            onChange={(e) => setPhone(e)}
-          />
+          <div className="flex items-center text-3xl">
+            <p className="mr-2">+</p>
+            <PinInput
+              className="my-4"
+              length={3}
+              type="number"
+              value={phonePrefix}
+              onChange={(e) => setPhonePrefix(e)}
+            />
+            <p className="mx-2">-</p>
+            <PinInput
+              className="my-4"
+              length={9}
+              type="number"
+              value={phone}
+              onChange={(e) => setPhone(e)}
+            />
+          </div>
           <Button fullWidth loading={isSubmitting} onClick={sendPhone}>
             Odeslat kód
           </Button>
@@ -145,7 +205,6 @@ const TelegramBroadcast: FC = () => {
           >
             Nahrát fotku/video
           </Button>
-
           <Button loading={isSending} onClick={sendBroadcast}>
             Odeslat zprávu
           </Button>
