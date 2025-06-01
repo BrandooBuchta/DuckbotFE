@@ -17,7 +17,7 @@ export const convertVideo = async (file: File): Promise<Blob> => {
     "-i",
     fileName,
     "-vf",
-    "scale='min(720,iw)':-2:flags=lanczos,eq=saturation=1.5:contrast=1.1:brightness=0.03",
+    "scale='min(720,iw)':-2:flags=lanczos,eq=saturation=1.3:contrast=1.2:brightness=0.02",
     "-c:v",
     "libx264",
     "-crf",
@@ -35,5 +35,5 @@ export const convertVideo = async (file: File): Promise<Blob> => {
 
   const data = ffmpeg.FS("readFile", outputName);
 
-  return new Blob([data.buffer], { type: "video/mp4" });
+  return new Blob([data], { type: "video/mp4" });
 };
