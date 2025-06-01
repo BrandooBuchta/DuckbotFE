@@ -50,18 +50,18 @@ const toSnakeCase = (obj: any): any => {
   }
 };
 
-instance.interceptors.request.use(
-  (config) => {
-    if (config.data) {
-      config.data = toSnakeCase(config.data);
-    }
+instance.interceptors.request.use((config) => {
+  const isFormData = config.data instanceof FormData;
 
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  },
-);
+  if (!isFormData && config.data) {
+    config.data = toSnakeCase(config.data);
+    config.headers["Content-Type"] = "application/json"; // jen pro JSON
+  } else {
+    delete config.headers["Content-Type"]; // nech Axios nastavit sám
+  }
+
+  return config;
+});
 
 instance.interceptors.response.use(
   (response) => {

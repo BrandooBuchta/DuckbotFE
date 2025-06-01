@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 
 import MarkdownTextarea from "./MarkdownTextarea";
 
+import { convertVideo } from "@/utils/ffmpegProcessor"; // přidej import
 import { api } from "@/utils/api";
 import useBotStore from "@/stores/bot";
 
@@ -115,15 +116,17 @@ const TelegramBroadcast: FC = () => {
 
       formData.append("session", session);
       formData.append("message", message);
-      formData.append("lang", bot?.lang || "cs");
+      formData.append("lang", bot?.lang || "");
+
       if (file) {
-        console.log("file: ", file);
-        formData.append("file", file);
+        toast.info("⏳ Zpracovávám video… může to chvíli trvat");
+
+        const processedBlob = await convertVideo(file);
+
+        formData.append("file", processedBlob, "processed.mp4");
       }
 
-      await api.post("/telegram/broadcast", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      await api.post("/telegram/broadcast", formData);
 
       toast.success("Zprávy odeslány");
       setMessage("");
