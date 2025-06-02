@@ -129,7 +129,7 @@ const Sidebar: FC<{ children: JSX.Element }> = ({ children }) => {
           className="flex-1 p-1"
           transition={{ type: "tween", duration: 0.3 }}
         >
-          {children}
+          <div>{children}</div>
         </motion.div>
       </div>
     </div>

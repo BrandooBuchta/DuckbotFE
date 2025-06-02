@@ -7,13 +7,17 @@ import {
   NumberInput,
   Select,
   Text,
+  CopyButton,
+  Tooltip,
+  ActionIcon,
 } from "@mantine/core";
 import { toast } from "react-toastify";
 import { DateInput } from "@mantine/dates";
 import { useRouter } from "next/router";
-import { IconTrash } from "@tabler/icons-react";
+import { IconCheck, IconCopy, IconTrash } from "@tabler/icons-react";
 
 import ScenarioModal from "./ScenarioModal";
+import Section from "./Section";
 
 import useBotStore from "@/stores/bot";
 import { CMS } from "@/interfaces/bot";
@@ -24,7 +28,8 @@ import { updateCORSPolicy } from "@/utils/cors";
 const levels: string[] = ["Nezastakováno", "Zastakováno", "Affiliate"];
 
 const General: FC = () => {
-  const { updateBot, bot } = useBotStore();
+  const { updateBot, bot, webhookInfo, setWebhook, deleteWebhook } =
+    useBotStore();
   const { push } = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [dnsInstructions, setDnsInstructions] = useState<string | null>(null);
@@ -95,6 +100,52 @@ const General: FC = () => {
   if (bot)
     return (
       <Box className="w-full my-2" style={{ position: "relative" }}>
+        {bot && (
+          <div className="mb-5">
+            <div className="flex w-full justify-between items-center">
+              <div>
+                <p className="font-bold">URL</p>
+                <div className="flex">
+                  <p className="text-gray-500 text">{`https://ducknation.vercel.app/${bot.isEvent ? "event" : "b"}/${encodeURIComponent(bot[bot.isEvent ? "eventName" : "name"])}`}</p>
+                  <p className="text-gray-500 text">{`https://${bot.domain || "ducknation.vercel.app"}/${bot.isEvent ? "event" : "b"}/${encodeURIComponent(bot[bot.isEvent ? "eventName" : "name"])}`}</p>
+                  <CopyButton
+                    timeout={2000}
+                    value={`https://${bot.domain || "ducknation.vercel.app"}/${bot.isEvent ? "event" : "b"}/${encodeURIComponent(bot[bot.isEvent ? "eventName" : "name"])}`}
+                  >
+                    {({ copied, copy }) => (
+                      <Tooltip
+                        withArrow
+                        label={copied ? "Copied" : "Copy"}
+                        position="right"
+                      >
+                        <ActionIcon
+                          color={copied ? "teal" : "gray"}
+                          variant="subtle"
+                          onClick={copy}
+                        >
+                          {copied ? (
+                            <IconCheck size={16} />
+                          ) : (
+                            <IconCopy size={16} />
+                          )}
+                        </ActionIcon>
+                      </Tooltip>
+                    )}
+                  </CopyButton>
+                </div>
+              </div>
+              <div className="flex gap-1">
+                <Button
+                  variant="light"
+                  onClick={() => (webhookInfo ? deleteWebhook() : setWebhook())}
+                >
+                  <p className="text-black mr-2">WEBHOOK: </p>
+                  <b>{webhookInfo ? "ON" : "OFF"}</b>
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
         <form
           className="flex flex-col gap-2"
           onSubmit={form.onSubmit(handleSubmit)}
