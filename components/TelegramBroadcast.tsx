@@ -1,13 +1,13 @@
 "use client";
 
 import { FC, useEffect, useRef, useState } from "react";
-import { Button, Card, PinInput, Text } from "@mantine/core";
+import { Button, Card, PinInput, Text, Checkbox } from "@mantine/core";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 
 import MarkdownTextarea from "./MarkdownTextarea";
 
-import { convertVideo } from "@/utils/ffmpegProcessor"; // přidej import
+import { convertVideo } from "@/utils/ffmpegProcessor";
 import { api } from "@/utils/api";
 import useBotStore from "@/stores/bot";
 
@@ -25,7 +25,7 @@ const TelegramBroadcast: FC = () => {
   const [phone, setPhone] = useState("");
   const [phonePrefix, setPhonePrefix] = useState("");
   const [code, setCode] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState<string>("");
   const [authStep, setAuthStep] = useState<"phone" | "code" | "done">("phone");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSending, setIsSending] = useState(false);
@@ -33,6 +33,8 @@ const TelegramBroadcast: FC = () => {
   const [phoneCodeHash, setPhoneCodeHash] = useState<string | null>(null);
   const [startSession, setStartSession] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
+  const [sendOnlyToNew, setSendOnlyToNew] = useState(false);
+
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -120,13 +122,12 @@ const TelegramBroadcast: FC = () => {
 
       if (file) {
         toast.info("⏳ Zpracovávám video… může to chvíli trvat");
-
         const processedBlob = await convertVideo(file);
 
         formData.append("file", processedBlob, "processed.mp4");
       }
 
-      await api.post("/telegram/broadcast", formData);
+      await api.post(`/telegram/broadcast${sendOnlyToNew && "-new"}`, formData);
 
       toast.success("Zprávy odeslány");
       setMessage("");
@@ -229,6 +230,14 @@ const TelegramBroadcast: FC = () => {
               </Button>
             )}
           </div>
+
+          <Checkbox
+            checked={sendOnlyToNew}
+            className="mb-3"
+            label="Odeslat pouze novým"
+            onChange={(event) => setSendOnlyToNew(event.currentTarget.checked)}
+          />
+
           <Button loading={isSending} onClick={sendBroadcast}>
             Odeslat zprávu
           </Button>
