@@ -14,8 +14,10 @@ import { DateTimePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 
 dayjs.extend(utc);
+dayjs.extend(timezone);
 
 import { IconTrash } from "@tabler/icons-react";
 import { toast } from "react-toastify";
@@ -39,20 +41,23 @@ const SequenceCard: FC<SequenceProps> = ({ sequence }) => {
   const form = useForm<UpdateSequence>({
     initialValues: {
       ...sequence,
-      startsAt: sequence?.startsAt
-        ? dayjs.utc(sequence.startsAt).toDate() // Načítání přímo v UTC
-        : null,
+      startsAt: sequence?.startsAt ? new Date(sequence.startsAt) : null,
     },
   });
 
   const handleChange = (field: keyof UpdateSequence, value: any) => {
-    const updatedValue =
-      field === "startsAt" && value
-        ? dayjs.utc(value).toISOString() // Při změně ukládáme jako ISO string
-        : value;
+    let updatedValue: any;
+
+    if (field === "startsAt" && value) {
+      const dateObj = typeof value === "string" ? new Date(value) : value;
+
+      updatedValue = dayjs(dateObj).utc().toISOString();
+    } else {
+      updatedValue = value;
+    }
 
     setChangedFields((prev) => ({ ...prev, [field]: updatedValue }));
-    form.setFieldValue(field, updatedValue);
+    form.setFieldValue(field, value);
   };
 
   const updateSequence = async () => {
@@ -80,9 +85,10 @@ const SequenceCard: FC<SequenceProps> = ({ sequence }) => {
       await sequencesStore.deleteSequence(sequence.id);
       await sequencesStore.getSequences();
       toast.success("Sekvence úspěšně smazána.");
-      setIsDeleteLoading(false);
     } catch (error) {
       toast.error(`${error}`);
+    } finally {
+      setIsDeleteLoading(false);
     }
   };
 
@@ -119,78 +125,68 @@ const SequenceCard: FC<SequenceProps> = ({ sequence }) => {
           </ActionIcon>
         </div>
       </div>
+
       <div>
         <Text className="mb-2 font-bold text-sm">Publikum</Text>
-        <div className="flex gap-5 justify-start w-full">
-          <MultiSelect
-            className="w-full"
-            data={[
-              { label: "Nezastakováno", value: "0" },
-              { label: "Zastakováno", value: "1" },
-              { label: "Affiliate", value: "2" },
-            ]}
-            {...form.getInputProps("levels", {
-              type: "checkbox",
-            })}
-            onChange={(e) => handleChange("levels", e)}
-          />
-        </div>
+        <MultiSelect
+          className="w-full"
+          data={[
+            { label: "Nezastakováno", value: "0" },
+            { label: "Zastakováno", value: "1" },
+            { label: "Affiliate", value: "2" },
+          ]}
+          {...form.getInputProps("levels", {
+            type: "checkbox",
+          })}
+          defaultValue={sequence.levels}
+          onChange={(e) => handleChange("levels", e)}
+        />
       </div>
+
       <div className="flex lg:flex-row flex-col gap-5 my-3">
         <div className="flex flex-col w-full">
           <Text className="my-2 font-bold text-sm">Opakování zprávy</Text>
-          <div className="flex flex-col gap-2 justify-start w-full">
-            <Switch
-              label="Opakovat"
-              {...form.getInputProps("repeat", {
-                type: "checkbox",
-              })}
-              onChange={(e) => handleChange("repeat", e.currentTarget.checked)}
-            />
-            <NumberInput
-              className="w-full"
-              disabled={!(sequence.repeat || form.getValues().repeat)}
-              label="Frekvence (Dny)"
-              placeholder="Např. 7"
-              {...form.getInputProps("interval", {
-                type: "input",
-              })}
-              onChange={(value) => handleChange("interval", value)}
-            />
-          </div>
+          <Switch
+            label="Opakovat"
+            {...form.getInputProps("repeat", {
+              type: "checkbox",
+            })}
+            onChange={(e) => handleChange("repeat", e.currentTarget.checked)}
+          />
+          <NumberInput
+            className="w-full"
+            disabled={!(sequence.repeat || form.getValues().repeat)}
+            label="Frekvence (Dny)"
+            placeholder="Např. 7"
+            {...form.getInputProps("interval", {
+              type: "input",
+            })}
+            onChange={(value) => handleChange("interval", value)}
+          />
         </div>
+
         <div className="flex flex-col w-full">
           <Text className="my-2 font-bold text-sm">Plánování zprávy</Text>
-          <div className="flex flex-col gap-2 justify-start w-full">
-            <Switch
-              label="Odeslat okamžitě?"
-              {...form.getInputProps("sendImmediately", {
-                type: "checkbox",
-              })}
-              onChange={(e) =>
-                handleChange("sendImmediately", e.currentTarget.checked)
-              }
-            />
-            <DateTimePicker
-              className="w-full mb-3"
-              disabled={form.getValues().sendImmediately}
-              label="První zprávu odeslat"
-              placeholder="Vyberte datum a čas"
-              value={
-                form.values.startsAt
-                  ? dayjs.utc(form.values.startsAt).toDate()
-                  : null
-              }
-              onChange={(value) => {
-                handleChange(
-                  "startsAt",
-                  value ? dayjs.utc(value).toISOString() : null,
-                );
-              }}
-            />
-          </div>
+          <Switch
+            label="Odeslat okamžitě?"
+            {...form.getInputProps("sendImmediately", {
+              type: "checkbox",
+            })}
+            onChange={(e) =>
+              handleChange("sendImmediately", e.currentTarget.checked)
+            }
+          />
+          <DateTimePicker
+            className="w-full mb-3"
+            disabled={form.getValues().sendImmediately}
+            label="První zprávu odeslat"
+            placeholder="Vyberte datum a čas"
+            value={form.values.startsAt ? new Date(form.values.startsAt) : null}
+            onChange={(value) => handleChange("startsAt", value)}
+          />
         </div>
       </div>
+
       <div className="mb-5">
         <Text className="font-bold text-sm mb-1">Zpráva</Text>
         <MarkdownTextarea
@@ -206,6 +202,7 @@ const SequenceCard: FC<SequenceProps> = ({ sequence }) => {
           onChange={(e) => handleChange("checkStatus", e.currentTarget.checked)}
         />
       </div>
+
       <Button
         disabled={JSON.stringify(changedFields) === "{}"}
         loading={isLoading}

@@ -25,10 +25,9 @@ const Statistics: FC = () => {
   const [isClient, setIsClient] = useState(false);
   const [statistics, setStatistics] = useState<BotStatistic[]>([]);
   const [interval, setInterval] = useState<IntervalValue>("total");
-  const [customRange, setCustomRange] = useState<[Date | null, Date | null]>([
-    null,
-    null,
-  ]);
+  const [customRange, setCustomRange] = useState<
+    [string | null, string | null]
+  >([null, null]);
 
   const { bot } = useBotStore();
 
@@ -39,8 +38,8 @@ const Statistics: FC = () => {
       const params = new URLSearchParams({ interval });
 
       if (interval === "custom" && customRange[0] && customRange[1]) {
-        params.append("start", customRange[0].toISOString());
-        params.append("end", customRange[1].toISOString());
+        params.append("start", customRange[0].toString());
+        params.append("end", customRange[1].toString());
       }
 
       const { data } = await api.get<BotStatistic[]>(
@@ -74,7 +73,7 @@ const Statistics: FC = () => {
           label="Vlastní rozsah"
           type="range"
           value={customRange}
-          onChange={setCustomRange}
+          onChange={(e) => setCustomRange(e)}
         />
       )}
 

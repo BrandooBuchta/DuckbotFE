@@ -75,7 +75,7 @@ const SignUp: FC = () => {
 
         <Paper withBorder mt={30} p={20} radius="md" shadow="md">
           <form onSubmit={form.onSubmit((values) => handleSignUp(values))}>
-            <Switch
+            {/* <Switch
               className="mt-5"
               defaultChecked={Boolean(isEvent)}
               label="Tento bot slouží pro Live Event"
@@ -83,7 +83,7 @@ const SignUp: FC = () => {
                 form.setFieldValue("isEvent", event.currentTarget.checked);
                 replace(`/auth/sign-up?isEvent=${event.currentTarget.checked}`);
               }}
-            />
+            /> */}
 
             {form.getValues().isEvent ? (
               <TextInput

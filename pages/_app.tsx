@@ -65,7 +65,6 @@ export default function App({ Component, pageProps }: AppProps) {
           locale: "cs",
           firstDayOfWeek: 0,
           weekendDays: [0],
-          timezone: "UTC",
         }}
       >
         <ToastContainer />

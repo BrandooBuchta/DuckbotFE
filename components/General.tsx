@@ -106,7 +106,6 @@ const General: FC = () => {
               <div>
                 <p className="font-bold">URL</p>
                 <div className="flex">
-                  <p className="text-gray-500 text">{`https://ducknation.vercel.app/${bot.isEvent ? "event" : "b"}/${encodeURIComponent(bot[bot.isEvent ? "eventName" : "name"])}`}</p>
                   <p className="text-gray-500 text">{`https://${bot.domain || "ducknation.vercel.app"}/${bot.isEvent ? "event" : "b"}/${encodeURIComponent(bot[bot.isEvent ? "eventName" : "name"])}`}</p>
                   <CopyButton
                     timeout={2000}
@@ -265,7 +264,8 @@ const General: FC = () => {
                 label="Lokace Eventu"
                 {...form.getInputProps("eventLocation")}
               />
-              <DateInput
+              {/* TODO: If we'll use it on events */}
+              {/* <DateInput
                 label="Event Date"
                 value={
                   form.values.eventDate ? new Date(form.values.eventDate) : null
@@ -276,7 +276,7 @@ const General: FC = () => {
                     date ? date.toISOString() : "",
                   )
                 }
-              />
+              /> */}
             </>
           )}
           <Select
