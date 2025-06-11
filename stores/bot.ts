@@ -13,6 +13,14 @@ import {
 } from "@/interfaces/bot";
 import { api } from "@/utils/api";
 
+function toBase64Unicode(str: string): string {
+  return btoa(
+    encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (_, p1) =>
+      String.fromCharCode(parseInt(p1, 16)),
+    ),
+  );
+}
+
 interface AuthState {
   isLoggedIn: boolean;
   bot: Bot | null;
@@ -38,7 +46,7 @@ const useBotStore = create<AuthState>()(
             data: { bot, token },
           } = await api.post<SignInResponse>("bot/sign-in", {
             ...input,
-            password: btoa(input.password),
+            password: toBase64Unicode(input.password),
           });
 
           Cookies.set("token", token, {
@@ -63,11 +71,10 @@ const useBotStore = create<AuthState>()(
         });
       },
       signUp: async (input, isEvent) => {
-        console.log(input)
         try {
           await api.post("bot/sign-up", {
             ...input,
-            password: btoa(input.password),
+            password: toBase64Unicode(input.password),
             isEvent,
           });
 
