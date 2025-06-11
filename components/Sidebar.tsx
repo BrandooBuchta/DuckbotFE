@@ -2,7 +2,6 @@
 
 import { FC, JSX, useEffect, useState } from "react";
 import {
-  IconBroadcast,
   IconLink,
   IconLogout,
   IconMenu2,
@@ -25,7 +24,6 @@ const menuData = [
   { link: "sequences", label: "Sekvence", icon: IconMessage },
   { link: "academy-links", label: "Academy Links", icon: IconLink },
   { link: "users", label: "Uživatelé", icon: IconUsers },
-  { link: "broadcast", label: "Broadcast", icon: IconBroadcast },
 ];
 
 const Sidebar: FC<{ children: JSX.Element }> = ({ children }) => {
