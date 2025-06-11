@@ -6,7 +6,6 @@ import {
   Paper,
   PasswordInput,
   Select,
-  Switch,
   Text,
   TextInput,
   Title,
@@ -70,6 +69,18 @@ const SignUp: FC = () => {
             onClick={() => push("/auth/sign-in")}
           >
             Přihlásit se
+          </Anchor>
+        </Text>
+
+        <Text c="dimmed" mt={5} size="sm" ta="center">
+          Nevíš jak si vytvořit Bota?{" "}
+          <Anchor
+            href="https://www.youtube.com/watch?v=gc4y4278FN8"
+            rel="noopener noreferrer"
+            size="sm"
+            target="_blank"
+          >
+            Video
           </Anchor>
         </Text>
 
